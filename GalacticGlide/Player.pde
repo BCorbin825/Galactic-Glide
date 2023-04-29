@@ -185,6 +185,7 @@ class Player extends Entity {
         game.bossClock.stop();
         break;
       // Debug buttons
+      //case 'L': game.updateScale(game.currScale + 1); break;
       //case '.': game.spawnRandomObstacle(); break;
       //case ',': game.spawnRandomEnemy(); break;
       //case '/': game.spawnRandomBoss(); break;

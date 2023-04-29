@@ -46,7 +46,7 @@ class Game {
   final int MAX_SCALE_TIMES = chooseByDiff(5, 10, 15);   // Maximum number of times to scale
   
   final float MIN_HP_SCALE = 1.0f;                           // Minimum HP scale
-  final float MAX_HP_SCALE = chooseByDiff(3.0f, 5.0f, 7.0f); // Maximum HP scale
+  final float MAX_HP_SCALE = chooseByDiff(4.0f, 6.0f, 8.0f); // Maximum HP scale
   float hpScale = MIN_HP_SCALE;                              // Current HP scale
   
   Queue<Powerup> powerupQ;
@@ -296,8 +296,8 @@ class Game {
    * Spawns obstacles/enemies over a gradually steeper interval.
    */
   void handleSpawns() {
-    // Spawn 1-3 enemies every 3-5 seconds based on difficulty
-    if (gameClock.time() - timeSinceEnemy >= chooseByDiff(5, 4, 3)*1000) {
+    // Spawn 1-3 enemies every 3-5 seconds based on difficulty, divided by a value based on the current game scale 
+    if (gameClock.time() - timeSinceEnemy >= (chooseByDiff(5, 4, 3)*1000) / ((currScale*chooseByDiff(0.1, 0.033, 0.011)) + 1)) {
       int numEnemies = (int)random(1,3);
       for (int i = 0; i < numEnemies; ++i)
         spawnRandomEnemy();
@@ -473,6 +473,7 @@ class Game {
    */
   void updateScale(int newScale) {
     currScale = constrain(newScale, 0, MAX_SCALE_TIMES);
+    println("Current scale: " + currScale);
     hpScale = map(currScale, 0, MAX_SCALE_TIMES, MIN_HP_SCALE, MAX_HP_SCALE);
     timeSinceScale = gameClock.time();
   }
