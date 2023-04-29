@@ -86,7 +86,7 @@ class Enemy extends Entity {
     // Boss always drops a powerup, 50-50 between HP/score and common
     if (type > 3) {
       if (rand < 0.5) {
-        if (game.p.playerHealth < game.p.MAX_HP)
+        if (rand < 0.25 && game.p.playerHealth < game.p.MAX_HP && game.currScale != game.MAX_SCALE_TIMES)
           game.queuePowerup(PowerupType.HP, this);
         else
           game.queuePowerup(PowerupType.SCORE, this);
