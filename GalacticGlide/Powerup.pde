@@ -12,6 +12,7 @@ enum PowerupType {
   FIRERATE,
   HP,
   SCORE,
+  NULL
 }
 
 PowerupType[] commonPowerups = {

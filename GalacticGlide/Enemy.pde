@@ -88,32 +88,59 @@ class Enemy extends Entity {
       if (rand < 0.5) {
         if (rand < 0.25 && game.p.playerHealth < game.p.MAX_HP && game.currScale != game.MAX_SCALE_TIMES)
           game.queuePowerup(PowerupType.HP, this);
-        else
+        else if (game.p.scoreMult < game.p.MAX_SCORE_MULT)
           game.queuePowerup(PowerupType.SCORE, this);
       }
       else {
-        PowerupType randPower = commonPowerups[(int)random(commonPowerups.length)];
-        game.queuePowerup(randPower, this);
+        PowerupType randPower = powerUpHelper();
+        if (randPower != PowerupType.NULL) 
+          game.queuePowerup(randPower, this);
+        return;
       }
-      return;
     }
     else {
-      PowerupType randPower = commonPowerups[(int)random(commonPowerups.length)];
-      
-      switch(type) {
-       case 1: 
-         if (rand < .1) game.queuePowerup(randPower, this);
-         break;
-       case 2: 
-         if (rand < .2) game.queuePowerup(randPower, this);  
-         break;
-       case 3: 
-         if (rand < .3) game.queuePowerup(randPower, this);  
-         break;
+      PowerupType randPower = powerUpHelper();
+      if (randPower != PowerupType.NULL) {
+        switch(type) {
+         case 1: 
+           if (rand < .1) game.queuePowerup(randPower, this);
+           break;
+         case 2: 
+           if (rand < .2) game.queuePowerup(randPower, this);  
+           break;
+         case 3: 
+           if (rand < .3) game.queuePowerup(randPower, this);  
+           break;
+        }
       }
     } 
   }
   //------------------------------------- Powerup End ------------------------------------//
+  
+  
+  //------------------------------- Function: powerUpHelper ------------------------------//
+  /**
+   * Handles spawning the correct power ups when one or more are maxed out
+   */
+   PowerupType powerUpHelper() {
+     PowerupType randPower = commonPowerups[(int)random(commonPowerups.length)];
+     boolean fr = game.p.fireRate == game.p.MAX_FIRE_RATE_UPS;
+     boolean su = game.p.speedUps == game.p.MAX_SPEED_UPS;
+     boolean pu = game.p.powerUps == game.p.MAX_POWER_UPS;
+     if (!fr || !su || !pu) { // If all are max, skip and return null
+       if (fr || su || pu) {  // If any are max
+         while (true) {       // generate until one that is not max is generated
+           if (fr && randPower == PowerupType.FIRERATE || su && randPower == PowerupType.SPEED || pu && randPower == PowerupType.POWER) 
+             randPower = commonPowerups[(int)random(commonPowerups.length)];
+           else 
+             break;
+         }
+       }
+       return randPower;
+     }
+     return PowerupType.NULL;
+   }
+  //---------------------------------- powerUpHelper End ---------------------------------//
   
   
   //----------------------------------- Function: score ----------------------------------//
